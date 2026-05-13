@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Portfolio Dessins — David Lalande</title>
+
+  <style>
+    :root {
+      --bg: #08090f;
+      --bg-2: #11131d;
+      --text: #f5f1e8;
+      --muted: rgba(245, 241, 232, 0.72);
+      --line: rgba(255,255,255,0.12);
+      --line-soft: rgba(255,255,255,0.08);
+      --glass: rgba(255,255,255,0.05);
+      --accent: #e8d6b5;
+      --shadow: 0 30px 80px rgba(0,0,0,0.45);
+      --max: 1240px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Georgia, "Times New Roman", serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,255,255,0.06), transparent 18%),
+        radial-gradient(circle at 20% 80%, rgba(215,190,145,0.08), transparent 24%),
+        linear-gradient(180deg, #090a10 0%, #0b0c12 45%, #12131b 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, select { font: inherit; }
+
+    .container {
+      width: min(calc(100% - 40px), var(--max));
+      margin: 0 auto;
+    }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: grid;
+      place-items: center;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.06), transparent 18%), #06060a;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+
+    .loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loading-text {
+      letter-spacing: 0.85em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.85);
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.35; transform: scale(0.98); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+
+    .site-header {
+      position: absolute;
+      inset: 0 0 auto 0;
+      z-index: 20;
+      padding-top: 22px;
+    }
+
+    .header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 18px;
+      border: 1px solid var(--line-soft);
+      border-radius: 999px;
+      background: rgba(8, 9, 15, 0.52);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.24);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.18);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .brand-name {
+      display: block;
+      font-size: 0.95rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .brand-tagline {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .menu {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .menu a {
+      padding: 12px 16px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 0.84rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      transition: 0.25s ease;
+    }
+
+    .menu a:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.05);
+    }
+
+    .socials a {
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .socials svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
+    .hero {
+      min-height: 100vh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 130px 0 70px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.10), rgba(0,0,0,0.44));
+      z-index: 0;
+    }
+
+    .back-art {
+      position: absolute;
+      inset: 0;
+      background-image: url('images/fond.png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.18;
+      transform: scale(1.03);
+      filter: saturate(0.8) contrast(1.02) brightness(0.85);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 1100px);
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--line-soft);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+      margin-bottom: 24px;
+    }
+
+    .hero-kicker::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 16px rgba(232,214,181,0.8);
+    }
+
+    .site-title {
+      margin: 0;
+      font-size: clamp(3rem, 9vw, 6.4rem);
+      font-weight: 500;
+      line-height: 0.92;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .site-subtitle {
+      margin: 18px auto 36px;
+      max-width: 740px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.95;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .featured-art {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 30px;
+      background: rgba(7,7,11,0.42);
+      backdrop-filter: blur(18px);
+      box-shadow: var(--shadow);
+      text-align: left;
+    }
+
+    .featured-image {
+      min-height: 380px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .featured-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .featured-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 10px;
+    }
+
+    .featured-copy small {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--accent);
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+    }
+
+    .featured-copy h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-weight: 500;
+    }
+
+    .featured-copy p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .latest-tag {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 8px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .section { padding: 100px 0; }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title h3 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .section-title p {
+      margin: 0 auto;
+      max-width: 760px;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 34px;
+      padding: 18px;
+      border: 1px solid var(--line-soft);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .filters label {
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .filters select,
+    .filters button {
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      padding: 0 14px;
+      cursor: pointer;
+    }
+
+    .filters option {
+      color: #111;
+    }
+
+    .year-block { margin-top: 54px; }
+    .year-block:first-of-type { margin-top: 0; }
+
+    .year-header {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    .year-header h3 {
+      margin: 0;
+      font-size: clamp(1.5rem, 4vw, 2.4rem);
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .year-line {
+      height: 1px;
+      flex: 1;
+      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+    }
+
+    .year-months {
+      display: grid;
+      gap: 28px;
+    }
+
+    .gallery-month {
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 28px;
+      background: rgba(255,255,255,0.03);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+    }
+
+    .month-toggle {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      padding: 22px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .month-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .month-badge {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
+      color: var(--accent);
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .month-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .month-header h4 {
+      margin: 0 0 6px;
+      font-size: clamp(1.15rem, 3vw, 1.7rem);
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .month-subtitle {
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.6;
+    }
+
+    .month-count {
+      display: inline-flex;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .month-chevron {
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+    }
+
+    .gallery-month.open .month-chevron { transform: rotate(180deg); }
+
+    .month-panel {
+      display: none;
+      padding: 0 24px 24px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .gallery-month.open .month-panel { display: block; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      min-height: 440px;
+      border-radius: 26px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      box-shadow: var(--shadow);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card .overlay {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 22px;
+      background: linear-gradient(180deg, transparent, rgba(0,0,0,0.78));
+    }
+
+    .card h4 {
+      margin: 0 0 8px;
+      font-size: 1.35rem;
+      font-weight: 500;
+    }
+
+    .card p {
+      margin: 0;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.7;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px;
+      border: 1px solid var(--line-soft);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .about-box {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 38px;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .about-box p {
+      margin: 0;
+      line-height: 1.95;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(3, 3, 6, 0.92);
+      backdrop-filter: blur(18px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .lightbox.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .lightbox-backdrop {
+      position: absolute;
+      inset: 0;
+    }
+
+    .lightbox-content {
+      position: relative;
+      width: min(1100px, 100%);
+      max-height: min(92vh, 920px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 18px;
+      z-index: 1;
+    }
+
+    .lightbox-figure,
+    .lightbox-panel {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      box-shadow: var(--shadow);
+      border-radius: 28px;
+      overflow: hidden;
+    }
+
+    .lightbox-figure {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 70vh;
+    }
+
+    .lightbox-figure img {
+      width: 100%;
+      height: 100%;
+      max-height: 92vh;
+      object-fit: contain;
+      display: block;
+      background: #050507;
+    }
+
+    .lightbox-panel {
+      padding: 26px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .lightbox-panel small {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.28em;
+    }
+
+    .lightbox-panel h4 {
+      margin: 0;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 500;
+      line-height: 1.1;
+    }
+
+    .lightbox-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.9;
+    }
+
+    .lightbox-meta {
+      display: inline-flex;
+      align-self: flex-start;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      font-size: 0.82rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .lightbox-close,
+    .lightbox-nav,
+    .lightbox-fullscreen {
+      position: absolute;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      backdrop-filter: blur(10px);
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .lightbox-fullscreen {
+      top: 14px;
+      right: 70px;
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+    }
+
+    .lightbox-close {
+      top: 14px;
+      right: 14px;
+      width: 48px;
+      height: 48px;
+      border-radius: 999px;
+    }
+
+    .lightbox-nav {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      font-size: 1.15rem;
+    }
+
+    .lightbox-prev { left: 18px; }
+    .lightbox-next { right: 18px; }
+
+    footer {
+      padding: 30px 0 50px;
+      text-align: center;
+      color: var(--muted);
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    @media (max-width: 980px) {
+      .header-bar {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        border-radius: 28px;
+      }
+
+      .menu {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        width: 100%;
+      }
+
+      .featured-art,
+      .lightbox-content,
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .featured-copy { text-align: center; }
+      .latest-tag { align-self: center; }
+      .lightbox-figure { min-height: 52vh; }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: min(calc(100% - 24px), var(--max)); }
+      .site-header { padding-top: 14px; }
+      .header-bar { border-radius: 24px; padding: 12px; }
+      .logo { width: 46px; height: 46px; }
+      .brand-name { font-size: 0.78rem; letter-spacing: 0.16em; white-space: normal; }
+      .brand-tagline { font-size: 0.7rem; }
+      .menu a { padding: 10px 6px; font-size: 0.66rem; letter-spacing: 0.08em; }
+      .hero { padding-top: 210px; }
+      .site-title { font-size: clamp(2.5rem, 12vw, 4.4rem); letter-spacing: 0.08em; }
+      .featured-art { padding: 18px; border-radius: 24px; }
+      .month-toggle { padding: 18px; }
+      .month-panel { padding: 0 18px 18px; }
+      .month-left { align-items: flex-start; }
+      .month-header { flex-direction: column; align-items: flex-start; }
+      .card { min-height: 360px; }
+      .lightbox { padding: 14px; }
+      .lightbox-close { top: 10px; right: 10px; width: 44px; height: 44px; }
+      .lightbox-fullscreen { top: 10px; right: 60px; width: 44px; height: 44px; }
+      .lightbox-nav { width: 44px; height: 44px; }
+      .lightbox-prev { left: 10px; }
+      .lightbox-next { right: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-text">Loading .</div>
+  </div>
+
+  <header class="site-header">
+    <div class="container">
+      <div class="header-bar">
+        <a class="brand" href="#home" aria-label="Retour à l'accueil">
+          <div class="logo"><img src="images/profil.png" alt="Portrait de David Lalande" /></div>
+          <div>
+            <span class="brand-name">David Lalande</span>
+            <span class="brand-tagline">illustrations</span>
+          </div>
+        </a>
+
+        <nav class="menu" aria-label="Navigation principale">
+          <a href="#galerie">Galerie</a>
+          <a href="#apropos">À propos</a>
+          <a href="#contact">Dernier dessin</a>
+        </nav>
+
+        <div class="socials">
+          <a href="https://www.instagram.com/david_lalande/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2Zm0 1.8A3.95 3.95 0 0 0 3.8 7.75v8.5a3.95 3.95 0 0 0 3.95 3.95h8.5a3.95 3.95 0 0 0 3.95-3.95v-8.5a3.95 3.95 0 0 0-3.95-3.95h-8.5Zm8.95 1.35a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3ZM12 6.5A5.5 5.5 0 1 1 6.5 12 5.51 5.51 0 0 1 12 6.5Zm0 1.8A3.7 3.7 0 1 0 15.7 12 3.7 3.7 0 0 0 12 8.3Z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero" id="home">
+    <div class="back-art"></div>
+    <div class="container hero-content">
+      <span class="hero-kicker">illustrations traditionnelles et numériques</span>
+      <h1 class="site-title">Ton univers<br />en images</h1>
+      <p class="site-subtitle">Portfolio chronologique pour suivre ton évolution artistique.</p>
+
+      <div class="featured-art" id="contact">
+        <div class="featured-image">
+          <img id="latestArtworkImage" src="" alt="Dernier dessin ajouté" />
+        </div>
+        <div class="featured-copy">
+          <small>dernier dessin</small>
+          <h2 id="latestArtworkTitle">La dernière œuvre mise en ligne</h2>
+          <p id="latestArtworkDescription">Cette zone affiche automatiquement ton dessin le plus récent.</p>
+          <span class="latest-tag" id="latestArtworkDate">mis en avant</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="galerie">
+    <div class="container">
+      <div class="section-title">
+        <h3>Galerie</h3>
+        <p>Dessins triés automatiquement par année, puis par mois, à partir des dates indiquées dans gallery.json.</p>
+      </div>
+
+      <div class="filters" aria-label="Filtres de galerie">
+        <label for="yearFilter">Année</label>
+        <select id="yearFilter">
+          <option value="all">Toutes</option>
+        </select>
+
+        <label for="monthFilter">Mois</label>
+        <select id="monthFilter">
+          <option value="all">Tous</option>
+        </select>
+
+        <label for="sortFilter">Tri</label>
+        <select id="sortFilter">
+          <option value="desc">Plus récent d'abord</option>
+          <option value="asc">Plus ancien d'abord</option>
+        </select>
+
+        <button type="button" id="resetFilters">Réinitialiser</button>
+      </div>
+
+      <div id="galleryGrid"></div>
+    </div>
+  </section>
+
+  <section class="section" id="apropos">
+    <div class="container">
+      <div class="section-title">
+        <h3>À propos</h3>
+      </div>
+      <div class="about-box">
+        <p>Je partage ici mes évolutions, sketches, personnages et compositions. Cette galerie permet de garder une trace claire de mon évolution artistique.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lightbox-backdrop" id="lightboxBackdrop"></div>
+    <button class="lightbox-fullscreen" id="lightboxFullscreen" aria-label="Plein écran">⛶</button>
+    <button class="lightbox-close" id="lightboxClose" aria-label="Fermer">✕</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Image précédente">←</button>
+    <button class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Image suivante">→</button>
+
+    <div class="lightbox-content">
+      <figure class="lightbox-figure" id="lightboxFigure">
+        <img id="lightboxImage" src="" alt="" />
+      </figure>
+      <aside class="lightbox-panel">
+        <small>illustration</small>
+        <h4 id="lightboxTitle">Sans titre</h4>
+        <p id="lightboxDescription"></p>
+        <span class="lightbox-meta" id="lightboxDate">—</span>
+      </aside>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">© 2026 David Lalande Portfolio — Instagram</div>
+  </footer>
+
+  <script>
+    const galleryGrid = document.getElementById('galleryGrid');
+    const yearFilter = document.getElementById('yearFilter');
+    const monthFilter = document.getElementById('monthFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const resetFilters = document.getElementById('resetFilters');
+
+    const latestArtworkImage = document.getElementById('latestArtworkImage');
+    const latestArtworkTitle = document.getElementById('latestArtworkTitle');
+    const latestArtworkDescription = document.getElementById('latestArtworkDescription');
+    const latestArtworkDate = document.getElementById('latestArtworkDate');
+
+    const lightbox = document.getElementById('lightbox');
+    const lightboxFigure = document.getElementById('lightboxFigure');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxTitle = document.getElementById('lightboxTitle');
+    const lightboxDescription = document.getElementById('lightboxDescription');
+    const lightboxDate = document.getElementById('lightboxDate');
+    const lightboxClose = document.getElementById('lightboxClose');
+    const lightboxPrev = document.getElementById('lightboxPrev');
+    const lightboxNext = document.getElementById('lightboxNext');
+    const lightboxFullscreen = document.getElementById('lightboxFullscreen');
+    const lightboxBackdrop = document.getElementById('lightboxBackdrop');
+
+    let allArtworks = [];
+    let visibleArtworks = [];
+    let currentLightboxIndex = 0;
+
+    const monthNames = [
+      'janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+      'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'
+    ];
+
+    function escapeHTML(value = '') {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    function parseDate(value) {
+      const date = new Date(`${value}T00:00:00`);
+      return Number.isNaN(date.getTime()) ? null : date;
+    }
+
+    function formatDate(dateString) {
+      const date = parseDate(dateString);
+      if (!date) return dateString || 'date inconnue';
+      return new Intl.DateTimeFormat('fr-FR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      }).format(date);
+    }
+
+    function getYear(item) {
+      const date = parseDate(item.date);
+      return date ? String(date.getFullYear()) : 'inconnue';
+    }
+
+    function getMonth(item) {
+      const date = parseDate(item.date);
+      return date ? String(date.getMonth() + 1).padStart(2, '0') : 'inconnue';
+    }
+
+    function normalizeArtwork(item, index) {
+      return {
+        title: item.title || 'Sans titre',
+        description: item.description || '',
+        image: item.image || '',
+        date: item.date || '',
+        order: Number.isFinite(Number(item.order)) ? Number(item.order) : 0,
+        originalIndex: index
+      };
+    }
+
+    function isGalleryArtwork(item) {
+      if (!item.image || !item.date) return false;
+      const filename = item.image.split('/').pop();
+      return /^\d{4}-\d{2}-\d{2}(d\d+)?\.(jpg|jpeg|png|webp)$/i.test(filename);
+    }
+
+    function sortArtworks(items, direction = 'desc') {
+      return [...items].sort((a, b) => {
+        const dateA = parseDate(a.date)?.getTime() || 0;
+        const dateB = parseDate(b.date)?.getTime() || 0;
+        const dateCompare = direction === 'asc' ? dateA - dateB : dateB - dateA;
+        if (dateCompare !== 0) return dateCompare;
+
+        const orderCompare = direction === 'asc' ? a.order - b.order : b.order - a.order;
+        if (orderCompare !== 0) return orderCompare;
+
+        return a.originalIndex - b.originalIndex;
+      });
+    }
+
+    function groupByYearAndMonth(items) {
+      const grouped = new Map();
+
+      items.forEach((artwork, index) => {
+        const year = getYear(artwork);
+        const month = getMonth(artwork);
+        const monthKey = `${year}-${month}`;
+
+        if (!grouped.has(year)) {
+          grouped.set(year, new Map());
+        }
+
+        if (!grouped.get(year).has(monthKey)) {
+          grouped.get(year).set(monthKey, []);
+        }
+
+        grouped.get(year).get(monthKey).push({ ...artwork, visibleIndex: index });
+      });
+
+      return grouped;
+    }
+
+    function renderLatestArtwork() {
+      const latest = sortArtworks(allArtworks, 'desc')[0];
+      if (!latest) return;
+
+      latestArtworkImage.src = latest.image;
+      latestArtworkImage.alt = latest.title;
+      latestArtworkTitle.textContent = latest.title;
+      latestArtworkDescription.textContent = latest.description || 'Nouvelle illustration ajoutée à la galerie.';
+      latestArtworkDate.textContent = `ajouté le ${formatDate(latest.date)}`;
+    }
+
+    function populateFilters() {
+      const years = [...new Set(allArtworks.map(getYear))].sort((a, b) => Number(b) - Number(a));
+
+      yearFilter.innerHTML = '<option value="all">Toutes</option>' + years.map((year) => (
+        `<option value="${escapeHTML(year)}">${escapeHTML(year)}</option>`
+      )).join('');
+
+      monthFilter.innerHTML = '<option value="all">Tous</option>' + monthNames.map((month, index) => {
+        const value = String(index + 1).padStart(2, '0');
+        return `<option value="${value}">${month}</option>`;
+      }).join('');
+    }
+
+    function getFilteredArtworks() {
+      const selectedYear = yearFilter.value;
+      const selectedMonth = monthFilter.value;
+      const selectedSort = sortFilter.value;
+
+      const filtered = allArtworks.filter((artwork) => {
+        const yearMatches = selectedYear === 'all' || getYear(artwork) === selectedYear;
+        const monthMatches = selectedMonth === 'all' || getMonth(artwork) === selectedMonth;
+        return yearMatches && monthMatches;
+      });
+
+      return sortArtworks(filtered, selectedSort);
+    }
+
+    function renderGallery() {
+      visibleArtworks = getFilteredArtworks();
+
+      if (!visibleArtworks.length) {
+        galleryGrid.innerHTML = '<div class="empty-state">Aucun dessin trouvé pour ce filtre.</div>';
+        return;
+      }
+
+      const grouped = groupByYearAndMonth(visibleArtworks);
+      const html = [...grouped.entries()].map(([year, months]) => {
+        const monthsHTML = [...months.entries()].map(([monthKey, artworks]) => {
+          const monthNumber = monthKey.split('-')[1];
+          const monthIndex = Number(monthNumber) - 1;
+          const monthLabel = monthNames[monthIndex] ? `${monthNames[monthIndex]} ${year}` : 'Date inconnue';
+          const badge = monthNames[monthIndex] ? monthNames[monthIndex].slice(0, 3) : '—';
+
+          const cardsHTML = artworks.map((artwork) => `
+            <article class="card" data-index="${artwork.visibleIndex}">
+              <img src="${escapeHTML(artwork.image)}" alt="${escapeHTML(artwork.title)}" loading="lazy" />
+              <div class="overlay">
+                <h4>${escapeHTML(artwork.title)}</h4>
+                <p>${escapeHTML(artwork.description)}</p>
+              </div>
+            </article>
+          `).join('');
+
+          return `
+            <section class="gallery-month" data-month="${escapeHTML(monthKey)}">
+              <button class="month-toggle" type="button" aria-expanded="false">
+                <div class="month-left">
+                  <div class="month-badge">${escapeHTML(badge)}</div>
+                  <div class="month-header">
+                    <div>
+                      <h4>${escapeHTML(monthLabel)}</h4>
+                      <div class="month-subtitle">Dessins classés par date à l'intérieur du mois.</div>
+                    </div>
+                    <span class="month-count">${artworks.length} dessin${artworks.length > 1 ? 's' : ''}</span>
+                  </div>
+                </div>
+                <div class="month-chevron">⌄</div>
+              </button>
+
+              <div class="month-panel">
+                <div class="gallery-grid">${cardsHTML}</div>
+              </div>
+            </section>
+          `;
+        }).join('');
+
+        return `
+          <section class="year-block">
+            <div class="year-header">
+              <span class="year-line"></span>
+              <h3>${escapeHTML(year)}</h3>
+              <span class="year-line"></span>
+            </div>
+            <div class="year-months">${monthsHTML}</div>
+          </section>
+        `;
+      }).join('');
+
+      galleryGrid.innerHTML = html;
+
+      galleryGrid.querySelectorAll('.card').forEach((card) => {
+        card.addEventListener('click', () => openLightbox(Number(card.dataset.index)));
+      });
+
+      galleryGrid.querySelectorAll('.month-toggle').forEach((toggle) => {
+        toggle.addEventListener('click', () => {
+          const block = toggle.closest('.gallery-month');
+          const isOpen = block.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', String(isOpen));
+        });
+      });
+    }
+
+    function openLightbox(index) {
+      const artwork = visibleArtworks[index];
+      if (!artwork) return;
+
+      currentLightboxIndex = index;
+      lightboxImage.src = artwork.image;
+      lightboxImage.alt = artwork.title;
+      lightboxTitle.textContent = artwork.title;
+      lightboxDescription.textContent = artwork.description || 'Illustration du portfolio.';
+      lightboxDate.textContent = `ajouté le ${formatDate(artwork.date)}`;
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    function navigateLightbox(direction) {
+      if (!visibleArtworks.length) return;
+      currentLightboxIndex = (currentLightboxIndex + direction + visibleArtworks.length) % visibleArtworks.length;
+      openLightbox(currentLightboxIndex);
+    }
+
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) {
+          await lightboxFigure.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      } catch (error) {
+        console.error('Plein écran non disponible', error);
+      }
+    }
+
+    async function loadGallery() {
+      try {
+        const response = await fetch('./gallery.json');
+        if (!response.ok) throw new Error('Impossible de charger gallery.json');
+
+        const data = await response.json();
+        allArtworks = data
+          .map(normalizeArtwork)
+          .filter(isGalleryArtwork);
+
+        populateFilters();
+        renderLatestArtwork();
+        renderGallery();
+      } catch (error) {
+        console.error(error);
+        latestArtworkTitle.textContent = 'gallery.json introuvable';
+        latestArtworkDescription.textContent = 'Vérifie que gallery.json est bien à la racine du site.';
+        latestArtworkDate.textContent = 'configuration requise';
+        galleryGrid.innerHTML = '<div class="empty-state">Impossible de charger la galerie.</div>';
+      }
+    }
+
+    yearFilter.addEventListener('change', renderGallery);
+    monthFilter.addEventListener('change', renderGallery);
+    sortFilter.addEventListener('change', renderGallery);
+
+    resetFilters.addEventListener('click', () => {
+      yearFilter.value = 'all';
+      monthFilter.value = 'all';
+      sortFilter.value = 'desc';
+      renderGallery();
+    });
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxBackdrop.addEventListener('click', closeLightbox);
+    lightboxPrev.addEventListener('click', () => navigateLightbox(-1));
+    lightboxNext.addEventListener('click', () => navigateLightbox(1));
+    lightboxFullscreen.addEventListener('click', toggleFullscreen);
+
+    document.addEventListener('keydown', (event) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (event.key === 'Escape') closeLightbox();
+      if (event.key === 'ArrowLeft') navigateLightbox(-1);
+      if (event.key === 'ArrowRight') navigateLightbox(1);
+      if (event.key.toLowerCase() === 'f') toggleFullscreen();
+    });
+
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('hidden');
+      }, 900);
+    });
+
+    loadGallery();
+  </script>
+</body>
+</html>
