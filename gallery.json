@@ -4361,6 +4361,34 @@
     "order": 2
   },
   {
+    "title": "2026-05-01",
+    "description": "Illustration du 2026-05-01.",
+    "image": "images/2026-05-01.jpg",
+    "date": "2026-05-01",
+    "order": 1
+  },
+  {
+    "title": "2026-05-01 — dessin 2",
+    "description": "Illustration du 2026-05-01, dessin 2.",
+    "image": "images/2026-05-01d2.jpg",
+    "date": "2026-05-01",
+    "order": 2
+  },
+  {
+    "title": "2026-05-02",
+    "description": "Illustration du 2026-05-02.",
+    "image": "images/2026-05-02.jpg",
+    "date": "2026-05-02",
+    "order": 1
+  },
+  {
+    "title": "2026-05-02 — dessin 2",
+    "description": "Illustration du 2026-05-02, dessin 2.",
+    "image": "images/2026-05-02d2.jpg",
+    "date": "2026-05-02",
+    "order": 2
+  },
+  {
     "title": "2026-05-03",
     "description": "Illustration du 2026-05-03.",
     "image": "images/2026-05-03.jpg",
@@ -4520,5 +4548,75 @@
     "image": "images/2026-05-22d2.jpg",
     "date": "2026-05-22",
     "order": 2
+  },
+  {
+    "title": "2026-05-31",
+    "description": "Illustration du 2026-05-31.",
+    "image": "images/2026-05-31.jpg",
+    "date": "2026-05-31",
+    "order": 1
+  },
+  {
+    "title": "2026-06-01",
+    "description": "Illustration du 2026-06-01.",
+    "image": "images/2026-06-01.jpg",
+    "date": "2026-06-01",
+    "order": 1
+  },
+  {
+    "title": "2026-06-04",
+    "description": "Illustration du 2026-06-04.",
+    "image": "images/2026-06-04.jpg",
+    "date": "2026-06-04",
+    "order": 1
+  },
+  {
+    "title": "2026-06-06",
+    "description": "Illustration du 2026-06-06.",
+    "image": "images/2026-06-06.jpg",
+    "date": "2026-06-06",
+    "order": 1
+  },
+  {
+    "title": "2026-06-06 — dessin 2",
+    "description": "Illustration du 2026-06-06, dessin 2.",
+    "image": "images/2026-06-06d2.jpg",
+    "date": "2026-06-06",
+    "order": 2
+  },
+  {
+    "title": "2026-06-07",
+    "description": "Illustration du 2026-06-07.",
+    "image": "images/2026-06-07.jpg",
+    "date": "2026-06-07",
+    "order": 1
+  },
+  {
+    "title": "2026-06-08",
+    "description": "Illustration du 2026-06-08.",
+    "image": "images/2026-06-08.jpg",
+    "date": "2026-06-08",
+    "order": 1
+  },
+  {
+    "title": "2026-06-09",
+    "description": "Illustration du 2026-06-09.",
+    "image": "images/2026-06-09.jpg",
+    "date": "2026-06-09",
+    "order": 1
+  },
+  {
+    "title": "2026-06-10",
+    "description": "Illustration du 2026-06-10.",
+    "image": "images/2026-06-10.jpg",
+    "date": "2026-06-10",
+    "order": 1
+  },
+  {
+    "title": "2026-06-15",
+    "description": "Illustration du 2026-06-15.",
+    "image": "images/2026-06-15.jpg",
+    "date": "2026-06-15",
+    "order": 1
   }
 ]
