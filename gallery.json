@@ -5227,5 +5227,12 @@
     "image": "images/2026-09-21.jpg",
     "date": "2026-09-21",
     "order": 1
+  },
+  {
+    "title": "2026-09-22",
+    "description": "Illustration du 2026-09-22.",
+    "image": "images/2026-09-22.jpg",
+    "date": "2026-09-22",
+    "order": 1
   }
 ]
